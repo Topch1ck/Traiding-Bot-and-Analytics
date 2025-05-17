@@ -3,3 +3,5 @@ numpy
 tqdm
 python-dotenv
 python-binance
+numba
+joblib
