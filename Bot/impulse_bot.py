@@ -20,7 +20,7 @@ CHAT_ID = int(os.getenv("CHAT_ID"))
 SYMBOLS = ["BTCUSDT", "ETHUSDT", "DOGEUSDT", "XRPUSDT", "XLMUSDT", "SOLUSDT"]
 WINDOW = 20  # in candles
 IMPULSE_THRESHOLD = 0.02  # 2%
-TP_PCT = 0.01  # take profit 1%
+TP_PCT = 0.01 / 100 # take profit 1%
 SL_PCT = 99.0  # 99% stop loss
 FETCH_INTERVAL = 60  # seconds
 KLINE_LIMIT = 100
@@ -85,21 +85,27 @@ async def check_strategy(session, symbol):
             if highs[i] >= trade["take_profit"] or lows[i] <= trade["stop_loss"]:
                 exit_price = trade["take_profit"] if highs[i] >= trade["take_profit"] else trade["stop_loss"]
                 exit_time = times[i]
-                profit_pct = (exit_price / trade["entry_price"] - 1) * 100
-                cash[symbol] *= (1 + profit_pct / 100)
+                profit_pct = (exit_price / entry_price - 1)
+                cash_after = cash * (1 + profit_pct)
+                profit_usdt = cash_after - cash
 
-                duration = exit_time - trade["entry_time"]
-                msg = (
-                    f"✅ <b>Выход из сделки</b>\n\n"
-                    f"🔁 <b>Вход:</b> {trade['entry_time'].strftime('%d-%m-%Y %H:%M:%S')} UTC\n"
-                    f"🕒 <b>Выход:</b> {exit_time.strftime('%d-%m-%Y %H:%M:%S')} UTC\n"
-                    f"⏱️ <b>Длительность:</b> {duration}\n"
-                    f"💱 <b>Валюта:</b> {symbol.replace('USDT', '')}/USDT\n"
-                    f"📈 <b>Цена входа:</b> {trade['entry_price']:.4f}\n"
-                    f"📉 <b>Цена выхода:</b> {exit_price:.4f}\n"
-                    f"🎯 <b>TP:</b> {TP_PCT:.2f}%\n"
-                    f"💰 <b>Cash:</b> ${cash[symbol]:.2f}"
-                )
+                duration_minutes = int((exit_time - entry_time).total_seconds() // 60)
+                duration_str = f"{duration_minutes // 60}:{duration_minutes % 60:02d} ч"
+
+                msg = f"""
+                ✅ <b>Выход из сделки</b>
+
+                🕐 <b>Вход:</b> {entry_time.strftime('%d-%m-%Y %H:%M:%S')} UTC
+                🕐 <b>Выход:</b> {exit_time.strftime('%d-%m-%Y %H:%M:%S')} UTC
+                ⏳ <b>Длительность:</b> {duration_str}
+
+                💰 <b>Валюта:</b> {symbol}
+                📉 <b>Цена входа:</b> {entry_price}
+                📈 <b>Цена выхода:</b> {exit_price}
+                🎯 <b>TP:</b> {tp_percent:.2%}
+                📊 <b>Cash:</b> ${cash_after:.4f}
+                💵 <b>Прибыль:</b> +${profit_usdt:.4f}
+                """
                 await bot.send_message(CHAT_ID, msg, parse_mode="HTML")
                 active_trades[symbol] = None
                 break
