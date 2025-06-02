@@ -3,7 +3,7 @@ name: 🚀 Deploy Bot to VPS
 on:
   push:
     branches:
-      - main
+      [main, TestGithbAction]
 
 jobs:
   deploy:
