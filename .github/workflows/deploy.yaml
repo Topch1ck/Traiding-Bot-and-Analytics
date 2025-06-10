@@ -32,6 +32,6 @@ jobs:
             echo "API_BINANCE_SECRET=${{ secrets.API_BINANCE_SECRET }}" >> .env
             echo "BOT_API=${{ secrets.BOT_API }}" >> .env
             echo "CHAT_ID=${{ secrets.CHAT_ID }}" >> .env
-            sudo /usr/bin/systemctl restart impulse_bot.service
-            
+          
+            echo ${{ secrets.USER_PWD }} | sudo -S -u user systemctl restart impulse_bot.service
             echo "Деплой завершен успешно!"
