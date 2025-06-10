@@ -1,29 +1,38 @@
-name: 🚀 Deploy Bot to VPS
+name: Deploy Python Bot
 
 on:
   push:
-    branches:
-        - TestGithbAction
+    branches: [TestGithbAction]
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    environment: production
 
     steps:
-      - name: 📥 Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: 🔐 Setup SSH
-        uses: webfactory/ssh-agent@v0.8.1
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: 🚀 Deploy via SSH
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /home/ubuntu/Traiding-Bot-and-Analytics
-            git pull origin main
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            
+            cd /home/user/trading_bot/Traiding-Bot-and-Analytics
+            git pull origin TestGithbAction
             source venv/bin/activate
             pip install -r requirements.txt
-            systemctl restart impulse-bot
-          EOF
+
+            python --version
+            pip freeze
+
+            echo "API_BINANCE_KEY=${{ secrets.API_BINANCE_KEY }}" > .env
+            echo "API_BINANCE_SECRET=${{ secrets.API_BINANCE_SECRET }}" >> .env
+            echo "BOT_API=${{ secrets.BOT_API }}" >> .env
+            echo "CHAT_ID=${{ secrets.CHAT_ID }}" >> .env
+
+            sudo systemctl restart impulse-bot.service
+            
+            echo "Деплой завершен успешно!"

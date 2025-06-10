@@ -102,7 +102,7 @@ async def check_strategy(session, symbol):
                 💰 <b>Валюта:</b> {symbol}
                 📉 <b>Цена входа:</b> {entry_price}
                 📈 <b>Цена выхода:</b> {exit_price}
-                🎯 <b>TP:</b> {tp_percent:.2%}
+                🎯 <b>TP:</b> {profit_pct:.2%}
                 📊 <b>Cash:</b> ${cash_after:.4f}
                 💵 <b>Прибыль:</b> +${profit_usdt:.4f}
                 """
