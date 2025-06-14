@@ -2,3 +2,9 @@ TraidingBotAndAnalyticsEvn
 dataframies
 trading_utils.egg-info
 .env
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.vscode/
+*.pyc
+.dmypy.json
