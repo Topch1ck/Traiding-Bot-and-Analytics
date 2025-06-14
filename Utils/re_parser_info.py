@@ -2,6 +2,7 @@
 
 import re
 
+
 def extract_symbol_timeframe(path: str):
     """
     Извлекает символ и таймфрейм из имени файла, формата SYMBOL_TIMEFRAME_from_....

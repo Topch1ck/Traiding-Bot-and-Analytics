@@ -7,6 +7,7 @@ warn_unused_ignores = true
 warn_return_any = true
 strict_optional = true
 namespace_packages = true
+exclude = "TraidingBotAndAnalyticsEvn/Scripts/.*\\.py$|Bot/impulse_bot\\.py$"
 
 [tool.black]
 line-length = 100
@@ -14,6 +15,15 @@ target-version = ["py311"]
 
 [tool.ruff]
 line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
 select = ["E", "F", "B", "UP", "N", "I"]
-fix = true
-exclude = ["TraidingBotAndAnalyticsEvn", ".mypy_cache"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = false
+docstring-code-format = true

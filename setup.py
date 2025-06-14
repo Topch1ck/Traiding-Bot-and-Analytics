@@ -1,9 +1,9 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
-    name='trading_utils',
-    version='0.1',
-    packages=find_packages(include=['Utils', 'Utils.*']),
-    description='Полезные утилиты для парсинга трейдинговых данных',
-    python_requires='>=3.7',
+    name="trading_utils",
+    version="0.1",
+    packages=find_packages(include=["Utils", "Utils.*"]),
+    description="Полезные утилиты для парсинга трейдинговых данных",
+    python_requires=">=3.7",
 )
